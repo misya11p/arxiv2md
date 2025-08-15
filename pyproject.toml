@@ -12,6 +12,9 @@ dependencies = [
     "typer>=0.16.0",
 ]
 
+[project.scripts]
+arxiv2md = "main:app"
+
 [dependency-groups]
 dev = [
     "ipykernel>=6.30.1",
