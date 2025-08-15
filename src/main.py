@@ -1,6 +1,8 @@
-import typer
 import tempfile
 from pathlib import Path
+
+import typer
+from halo import Halo
 
 from _get_source import get_source
 from _convert import tex2xml, xml2md
@@ -22,9 +24,15 @@ def main(
 ):
     with tempfile.TemporaryDirectory() as tmpdir:
         dpath_temp = Path(tmpdir)
-        dpath_source = get_source(url, dpath_temp / "arxiv_source")
-        fpath_jats = tex2xml(dpath_source, dpath_temp / "arxiv_source")
-        xml2md(fpath_jats, fpath_output)
+
+        with Halo(text=f"Get source for arXiv", spinner="dots") as spinner:
+            dpath_source = get_source(url, dpath_temp / "arxiv_source")
+            spinner.succeed()
+
+        with Halo(text=f"Convert to JATS XML", spinner="dots") as spinner:
+            fpath_jats = tex2xml(dpath_source, dpath_temp / "arxiv_source")
+            xml2md(fpath_jats, fpath_output)
+            spinner.succeed()
 
 
 if __name__ == "__main__":
