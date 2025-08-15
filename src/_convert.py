@@ -48,8 +48,8 @@ def tex2xml(
             "--nomathimages"
         ]
 
-    subprocess.run(command_latexml, cwd=dpath_work)
-    subprocess.run(command_latexmlpost, cwd=dpath_work)
+    subprocess.run(command_latexml, cwd=dpath_work, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
+    subprocess.run(command_latexmlpost, cwd=dpath_work, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
     return fpath_jats
 
 
