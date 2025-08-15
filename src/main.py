@@ -1,10 +1,9 @@
-import shutil
 import typer
 import tempfile
 from pathlib import Path
 
 from _get_source import get_source
-from _convert import tex2xml
+from _convert import tex2xml, xml2md
 
 
 CONTEXT_SETTINGS = dict(help_option_names=["-h", "--help"])
@@ -25,7 +24,7 @@ def main(
         dpath_temp = Path(tmpdir)
         dpath_source = get_source(url, dpath_temp / "arxiv_source")
         fpath_jats = tex2xml(dpath_source, dpath_temp / "arxiv_source")
-        shutil.copy(fpath_jats, fpath_output)
+        xml2md(fpath_jats, fpath_output)
 
 
 if __name__ == "__main__":
