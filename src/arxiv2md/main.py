@@ -9,13 +9,13 @@ from _convert import tex2xml, xml2md
 
 
 CONTEXT_SETTINGS = dict(help_option_names=["-h", "--help"])
-app = typer.Typer(context_settings=CONTEXT_SETTINGS)
+app = typer.Typer(add_completion=False, context_settings=CONTEXT_SETTINGS)
 
 
 @app.command()
 def main(
     url: str = typer.Argument(help="The URL to process"),
-    fpath_output: Path = typer.Option(
+    fpath_output: str = typer.Option(
         "output.md",
         "--output",
         "-o",
