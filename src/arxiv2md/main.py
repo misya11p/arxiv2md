@@ -24,13 +24,14 @@ def main(
 ):
     with tempfile.TemporaryDirectory() as tmpdir:
         dpath_temp = Path(tmpdir)
+        dpath_arxiv = dpath_temp / "arxiv_source"
 
         with Halo(text=f"Get source for arXiv", spinner="dots") as spinner:
-            dpath_source = get_source(url, dpath_temp / "arxiv_source")
+            dpath_source = get_source(url, dpath_arxiv)
             spinner.succeed()
 
         with Halo(text=f"Convert to JATS XML", spinner="dots") as spinner:
-            fpath_jats = tex2xml(dpath_source, dpath_temp / "arxiv_source")
+            fpath_jats = tex2xml(dpath_source, dpath_arxiv)
             xml2md(fpath_jats, fpath_output)
             spinner.succeed()
 
