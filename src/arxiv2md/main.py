@@ -20,7 +20,11 @@ def main(
     fpath_output: str = typer.Option(
         None,
         "--output", "-o",
-        help="The path to the output Markdown file. If None, the file will be named as `arxiv_<arxiv_id>.md`.",),
+        help=(
+            "The path to the output Markdown file. "
+            "If None, the file will be named as `arxiv_<arxiv_id>.md`."
+        ),
+    )
 ):
     stdout = True if fpath_output == "-" else False
     arxiv_id = extract_arxiv_id(url)
@@ -28,8 +32,23 @@ def main(
     if not stdout:
         fpath_output = fpath_output or f"arxiv_{arxiv_id.replace('.', '-')}.md"
         fpath_output = Path(fpath_output).resolve()
+
+        if not fpath_output.parent.exists():
+            if typer.confirm(
+                f"The directory `{fpath_output.parent}` does not exist. "
+                "Do you want to create it?",
+                default=True,
+            ):
+                fpath_output.parent.mkdir(parents=True)
+
+        if not fpath_output.suffix:
+            fpath_output = fpath_output.with_suffix(".md")
+
         if fpath_output.exists():
-            if not typer.confirm(f"{fpath_output} already exists. Do you want to overwrite it?"):
+            if not typer.confirm(
+                f"{fpath_output} already exists. "
+                "Do you want to overwrite it?"
+            ):
                 raise typer.Exit()
 
     with tempfile.TemporaryDirectory() as tmpdir:
