@@ -13,7 +13,7 @@ dependencies = [
 ]
 
 [project.scripts]
-arxiv2md = "main:app"
+arxiv2md = "arxiv2md.cli:app"
 
 [dependency-groups]
 dev = [
