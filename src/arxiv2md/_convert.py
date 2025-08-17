@@ -4,31 +4,22 @@ import re
 
 from bs4 import BeautifulSoup, NavigableString
 
+from _utils import get_main_texfile
+
 
 FNAME_XML = "_paper.xml"
 FNAME_JATS = "_paper.jats.xml"
 FNAME_MD = "_paper.md"
 
 
-def get_main_texfile(dpath_source: Path) -> Path:
-    tex_files = list(dpath_source.glob("*.tex"))
-    for fpath in tex_files:
-        with open(fpath, "r", encoding="utf-8") as f:
-            for line in f:
-                if line.strip().startswith(r"\documentclass"):
-                    return fpath
-    else:
-        raise FileNotFoundError("No .tex files found in the source directory.")
-
-
 def tex2xml(
     dpath_source: Path,
-    dpath_work: Path,
     no_images: bool = True
 ) -> Path:
-    fpath_tex = get_main_texfile(dpath_source)
+    dpath_work = dpath_source.parent
     fpath_xml = dpath_work / FNAME_XML
     fpath_jats = dpath_work / FNAME_JATS
+    fpath_tex = get_main_texfile(dpath_source)
     command_latexml = [
         "latexml",
         fpath_tex,

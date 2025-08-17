@@ -1,4 +1,5 @@
 import re
+from pathlib import Path
 
 
 def extract_arxiv_id(url: str) -> str:
@@ -11,3 +12,14 @@ def extract_arxiv_id(url: str) -> str:
             f"Invalid arXiv URL: {url}. "
             "Could not extract arXiv ID."
         )
+
+
+def get_main_texfile(dpath_source: Path) -> Path:
+    tex_files = list(dpath_source.glob("*.tex"))
+    for fpath in tex_files:
+        with open(fpath, "r", encoding="utf-8") as f:
+            for line in f:
+                if line.strip().startswith(r"\documentclass"):
+                    return fpath
+    else:
+        raise FileNotFoundError("No .tex files found in the source directory.")

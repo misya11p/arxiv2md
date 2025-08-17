@@ -9,6 +9,7 @@ from _get_source import get_source
 from _convert import tex2xml, xml2md
 
 
+DNAME_SOURCE = "arxiv_source"
 CONTEXT_SETTINGS = dict(help_option_names=["-h", "--help"])
 app = typer.Typer(add_completion=False, context_settings=CONTEXT_SETTINGS)
 
@@ -30,16 +31,18 @@ def main(
 
     with tempfile.TemporaryDirectory() as tmpdir:
         dpath_temp = Path(tmpdir)
-        dpath_arxiv = dpath_temp / "arxiv_source"
+        dpath_source = dpath_temp / DNAME_SOURCE
 
-        with Halo(text=f"Get source for arXiv", spinner="dots") as spinner:
-            dpath_source = get_source(arxiv_id, dpath_arxiv)
+        with Halo(text=f"Get source for arXiv:{arxiv_id}", spinner="dots") as spinner:
+            get_source(arxiv_id, dpath_source)
             spinner.succeed()
 
-        with Halo(text=f"Convert to JATS XML", spinner="dots") as spinner:
-            fpath_jats = tex2xml(dpath_source, dpath_arxiv)
+        with Halo(text=f"Convert to Markdown", spinner="dots") as spinner:
+            fpath_jats = tex2xml(dpath_source)
             xml2md(fpath_jats, fpath_output)
             spinner.succeed()
+
+    print(f"Markdown file saved to {fpath_output}")
 
 
 if __name__ == "__main__":
