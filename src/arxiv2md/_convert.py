@@ -12,14 +12,12 @@ FNAME_JATS = "_paper.jats.xml"
 FNAME_MD = "_paper.md"
 
 
-def tex2xml(
-    dpath_source: Path,
-    no_images: bool = True
-) -> Path:
+def tex2xml(dpath_source: Path) -> Path:
     dpath_work = dpath_source.parent
     fpath_xml = dpath_work / FNAME_XML
     fpath_jats = dpath_work / FNAME_JATS
     fpath_tex = get_main_texfile(dpath_source)
+
     command_latexml = [
         "latexml",
         fpath_tex,
@@ -29,18 +27,19 @@ def tex2xml(
         "latexmlpost",
         fpath_xml,
         "--format=jats",
+        "--nographicimages",
+        "--nodefaultresources",
+        "--nopictureimages",
+        "--nomathimages",
         f"--dest={fpath_jats}",
     ]
-    if no_images:
-        command_latexmlpost += [
-            "--nographicimages",
-            "--nodefaultresources",
-            "--nopictureimages",
-            "--nomathimages"
-        ]
-
-    subprocess.run(command_latexml, cwd=dpath_work, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
-    subprocess.run(command_latexmlpost, cwd=dpath_work, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
+    subprocess_options = {
+        "cwd": dpath_work,
+        "stdout": subprocess.DEVNULL,
+        "stderr": subprocess.DEVNULL
+    }
+    subprocess.run(command_latexml, **subprocess_options)
+    subprocess.run(command_latexmlpost, **subprocess_options)
     return fpath_jats
 
 
