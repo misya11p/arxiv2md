@@ -51,8 +51,8 @@ def main(
             ):
                 raise typer.Exit()
 
-    with tempfile.TemporaryDirectory() as tmpdir:
-        dpath_temp = Path(tmpdir)
+    with tempfile.TemporaryDirectory() as tempdir:
+        dpath_temp = Path(tempdir)
         dpath_source = dpath_temp / DNAME_SOURCE
 
         with Halo(
