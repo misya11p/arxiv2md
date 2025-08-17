@@ -79,7 +79,3 @@ def cli(
         with open(fpath_output, "w", encoding="utf-8") as f:
             f.write(content_md)
         print(f"Markdown file saved to {fpath_output}")
-
-
-if __name__ == "__main__":
-    app()
