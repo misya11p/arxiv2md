@@ -179,7 +179,7 @@ class JATSConverter:
             lambda m: self._fix_citation_group(m.group(0)),
             processed_text
         )
-        return processed_text.strip()
+        return self._clean_text(processed_text)
 
     def _fix_citation_group(self, citation_text):
         numbers = re.findall(r"\d+", citation_text)
