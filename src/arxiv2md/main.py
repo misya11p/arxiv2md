@@ -4,12 +4,12 @@ from pathlib import Path
 import typer
 from halo import Halo
 
+from _api import DNAME_SOURCE
 from _utils import extract_arxiv_id
 from _get_source import get_source
 from _convert import tex2xml, JATSConverter
 
 
-DNAME_SOURCE = "arxiv_source"
 CONTEXT_SETTINGS = dict(help_option_names=["-h", "--help"])
 app = typer.Typer(add_completion=False, context_settings=CONTEXT_SETTINGS)
 

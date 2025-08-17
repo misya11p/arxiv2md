@@ -4,7 +4,7 @@ import re
 
 from bs4 import BeautifulSoup, NavigableString
 
-from _utils import get_main_texfile
+from ._utils import get_main_texfile
 
 
 FNAME_XML = "_paper.xml"
