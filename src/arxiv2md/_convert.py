@@ -44,6 +44,8 @@ def tex2xml(dpath_source: Path) -> Path:
 
 
 class JATSConverter:
+    """Written by Claude Code, modified by developer."""
+
     def __init__(self, fpath_jats: Path):
         with open(fpath_jats, "r", encoding="utf-8") as f:
             content = f.read()
