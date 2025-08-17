@@ -6,7 +6,7 @@ from halo import Halo
 
 from _utils import extract_arxiv_id
 from _get_source import get_source
-from _convert import tex2xml, xml2md
+from _convert import tex2xml, JATSConverter
 
 
 DNAME_SOURCE = "arxiv_source"
@@ -22,27 +22,45 @@ def main(
         "--output", "-o",
         help="The path to the output Markdown file. If None, the file will be named as `arxiv_<arxiv_id>.md`.",),
 ):
+    stdout = True if fpath_output == "-" else False
     arxiv_id = extract_arxiv_id(url)
-    fpath_output = fpath_output or f"arxiv_{arxiv_id.replace('.', '-')}.md"
-    fpath_output = Path(fpath_output).resolve()
-    if fpath_output.exists():
-        if not typer.confirm(f"{fpath_output} already exists. Do you want to overwrite it?"):
-            raise typer.Exit()
+
+    if not stdout:
+        fpath_output = fpath_output or f"arxiv_{arxiv_id.replace('.', '-')}.md"
+        fpath_output = Path(fpath_output).resolve()
+        if fpath_output.exists():
+            if not typer.confirm(f"{fpath_output} already exists. Do you want to overwrite it?"):
+                raise typer.Exit()
 
     with tempfile.TemporaryDirectory() as tmpdir:
         dpath_temp = Path(tmpdir)
         dpath_source = dpath_temp / DNAME_SOURCE
 
-        with Halo(text=f"Get source for arXiv:{arxiv_id}", spinner="dots") as spinner:
+        with Halo(
+            text=f"Get source for arXiv:{arxiv_id}",
+            spinner="dots",
+            enabled=not stdout,
+        ) as spinner:
             get_source(arxiv_id, dpath_source)
             spinner.succeed()
 
-        with Halo(text=f"Convert to Markdown", spinner="dots") as spinner:
+        with Halo(
+            text=f"Convert to Markdown",
+            spinner="dots",
+            enabled=not stdout,
+        ) as spinner:
             fpath_jats = tex2xml(dpath_source)
-            xml2md(fpath_jats, fpath_output)
+            converter = JATSConverter(fpath_jats)
+            content_md = converter.convert_to_md()
             spinner.succeed()
 
-    print(f"Markdown file saved to {fpath_output}")
+    if stdout:
+        print(content_md)
+        return
+    else:
+        with open(fpath_output, "w", encoding="utf-8") as f:
+            f.write(content_md)
+        print(f"Markdown file saved to {fpath_output}")
 
 
 if __name__ == "__main__":

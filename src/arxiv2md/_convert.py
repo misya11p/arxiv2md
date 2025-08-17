@@ -57,7 +57,7 @@ class JATSConverter:
         self.references = {}
         self.output = []
 
-    def convert_to_md(self, fpath_output: Path):
+    def convert_to_md(self):
         self._clear()
 
         self._extract_title()
@@ -67,9 +67,6 @@ class JATSConverter:
         self._extract_references()
 
         markdown_content = "\n".join(self.output) + "\n"
-        with open(fpath_output, "w", encoding="utf-8") as f:
-            f.write(markdown_content)
-
         return markdown_content
 
     @staticmethod
@@ -304,11 +301,3 @@ class JATSConverter:
         alttext = alttext.replace("%", "")
         alttext = re.sub(r"\s+", " ", alttext)
         return alttext.strip()
-
-
-def xml2md(
-    fpath_jats: Path,
-    fpath_output: Path
-) -> str:
-    converter = JATSConverter(fpath_jats)
-    return converter.convert_to_md(fpath_output)
