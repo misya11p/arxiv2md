@@ -75,7 +75,6 @@ def main(
 
     if stdout:
         print(content_md)
-        return
     else:
         with open(fpath_output, "w", encoding="utf-8") as f:
             f.write(content_md)
