@@ -4,10 +4,10 @@ from pathlib import Path
 import typer
 from halo import Halo
 
-from _api import DNAME_SOURCE
-from _utils import extract_arxiv_id
-from _get_source import get_source
-from _convert import tex2xml, JATSConverter
+from ._api import DNAME_SOURCE
+from ._utils import extract_arxiv_id
+from ._get_source import get_source
+from ._convert import tex2xml, JATSConverter
 
 
 CONTEXT_SETTINGS = dict(help_option_names=["-h", "--help"])
@@ -15,7 +15,7 @@ app = typer.Typer(add_completion=False, context_settings=CONTEXT_SETTINGS)
 
 
 @app.command()
-def main(
+def cli(
     url: str = typer.Argument(help="The URL of the arXiv"),
     fpath_output: str = typer.Option(
         None,
