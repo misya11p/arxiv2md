@@ -30,7 +30,7 @@ def cli(
         )
     ),
 ):
-    stdout = True if fpath_output == "-" else False
+    stdout = fpath_output == "-"
     arxiv_id = extract_arxiv_id(url)
 
     if not stdout:
