@@ -6,7 +6,7 @@ from ._get_source import get_source
 from ._convert import tex2xml, JATSConverter
 
 
-DNAME_SOURCE = "arxiv_source"
+DNAME_SOURCE_ARXIV = "arxiv_source"
 
 
 def arxiv2md(url: str) -> str:
@@ -14,7 +14,7 @@ def arxiv2md(url: str) -> str:
 
     with tempfile.TemporaryDirectory() as tmpdir:
         dpath_temp = Path(tmpdir)
-        dpath_source = dpath_temp / DNAME_SOURCE
+        dpath_source = dpath_temp / DNAME_SOURCE_ARXIV
 
         get_source(arxiv_id, dpath_source)
         fpath_jats = tex2xml(dpath_source)
