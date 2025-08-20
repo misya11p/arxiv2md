@@ -7,9 +7,9 @@ from bs4 import BeautifulSoup, NavigableString
 from ._utils import get_main_texfile
 
 
-FNAME_XML = "_paper.xml"
-FNAME_JATS = "_paper.jats.xml"
-FNAME_MD = "_paper.md"
+FNAME_XML = "paper.xml"
+FNAME_JATS = "paper.jats.xml"
+FNAME_MD = "paper.md"
 
 
 def tex2xml(dpath_source: Path) -> Path:
