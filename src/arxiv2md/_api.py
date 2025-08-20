@@ -9,7 +9,7 @@ from ._convert import tex2xml, JATSConverter
 DNAME_SOURCE_ARXIV = "arxiv_source"
 
 
-def _core_arxiv2md_cli(arxiv_id, dpath_source) -> str:
+def _core_arxiv2md_cli(arxiv_id: str, dpath_source: str) -> str:
     from halo import Halo
 
     dpath_source = Path(dpath_source).resolve()
@@ -36,7 +36,7 @@ def _core_arxiv2md_cli(arxiv_id, dpath_source) -> str:
     return content_md
 
 
-def _core_arxiv2md(arxiv_id, dpath_source) -> str:
+def _core_arxiv2md(arxiv_id: str, dpath_source: str) -> str:
     dpath_source = Path(dpath_source).resolve()
     if not dpath_source.exists():
         dpath_source.mkdir(parents=True)

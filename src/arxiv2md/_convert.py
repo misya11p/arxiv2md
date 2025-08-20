@@ -43,13 +43,15 @@ def tex2xml(dpath_source: Path) -> Path:
     return fpath_jats
 
 
-class JATSConverter:
-    """Written by Claude Code, modified by developer."""
+# ======================================================================
+# The following was primarily written by Claude code, with minor
+# modifications made by the developer
 
-    def __init__(self, fpath_jats: Path):
+
+class JATSConverter:
+    def __init__(self, fpath_jats: str):
         with open(fpath_jats, "r", encoding="utf-8") as f:
             content = f.read()
-        self.fpath_jats = fpath_jats
         self.soup = BeautifulSoup(content, "xml")
         self._clear()
 
