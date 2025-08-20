@@ -18,6 +18,16 @@ def extract_arxiv_id(url: str) -> str:
 
 
 def get_source(url: str, dpath_output: str) -> str:
+    """
+    Download the source files of an arXiv paper.
+
+    Args:
+        url (str): The URL of the arXiv paper or the arXiv ID.
+        dpath_output (str): The directory to store the source files.
+
+    Returns:
+        str: The path to the output directory (same as `dpath_output`).
+    """
     arxiv_id = extract_arxiv_id(url)
     url_source = f"https://arxiv.org/e-print/{arxiv_id}"
     try:

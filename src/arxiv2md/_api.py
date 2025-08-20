@@ -63,6 +63,19 @@ def arxiv2md_cli(url: str, dpath_source: str | None = None) -> str:
 
 
 def arxiv2md(url: str, dpath_source: str | None = None) -> str:
+    """
+    Convert an arXiv paper to Markdown.
+
+    Args:
+        url (str): The URL of the arXiv paper or the arXiv ID.
+        dpath_source (str | None, optional):
+            The directory path to store the source files (e.g., .tex,
+            .xml). If None, a temporary directory will be used. Defaults
+            to None.
+
+    Returns:
+        str: The content of the converted Markdown file.
+    """
     arxiv_id = extract_arxiv_id(url)
 
     if dpath_source:

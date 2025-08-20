@@ -12,7 +12,9 @@ app = typer.Typer(add_completion=False, context_settings=CONTEXT_SETTINGS)
 
 @app.command()
 def cli(
-    url: str = typer.Argument(help="The URL of the arXiv"),
+    url: str = typer.Argument(
+        help="The URL of the arXiv paper or the arXiv ID."
+    ),
     fpath_output: str = typer.Option(
         None,
         "--output", "-o",
