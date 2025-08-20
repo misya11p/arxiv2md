@@ -1,12 +1,8 @@
 from pathlib import Path
 import tempfile
 
-from ._utils import extract_arxiv_id
-from ._utils import get_source
+from ._utils import extract_arxiv_id, get_source
 from ._convert import tex2xml, JATSConverter
-
-
-DNAME_SOURCE_ARXIV = "arxiv_source"
 
 
 def _core_arxiv2md_cli(arxiv_id: str, dpath_source: str) -> str:
@@ -15,13 +11,12 @@ def _core_arxiv2md_cli(arxiv_id: str, dpath_source: str) -> str:
     dpath_source = Path(dpath_source).resolve()
     if not dpath_source.exists():
         dpath_source.mkdir(parents=True)
-    dpath_source_arxiv = dpath_source / DNAME_SOURCE_ARXIV
 
     with Halo(
         text=f"Get source for arXiv:{arxiv_id}",
         spinner="dots",
     ) as spinner:
-        get_source(arxiv_id, dpath_source_arxiv)
+        dpath_source_arxiv = get_source(arxiv_id, dpath_source)
         spinner.succeed()
 
     with Halo(
@@ -40,9 +35,8 @@ def _core_arxiv2md(arxiv_id: str, dpath_source: str) -> str:
     dpath_source = Path(dpath_source).resolve()
     if not dpath_source.exists():
         dpath_source.mkdir(parents=True)
-    dpath_source_arxiv = dpath_source / DNAME_SOURCE_ARXIV
 
-    get_source(arxiv_id, dpath_source_arxiv)
+    dpath_source_arxiv = get_source(arxiv_id, dpath_source)
     fpath_jats = tex2xml(dpath_source_arxiv)
     converter = JATSConverter(fpath_jats)
     content_md = converter.convert_to_md()
