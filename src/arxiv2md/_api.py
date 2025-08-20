@@ -1,5 +1,6 @@
 from pathlib import Path
 import tempfile
+from typing import Tuple
 
 from ._utils import extract_arxiv_id, get_source
 from ._convert import tex2xml, JATSConverter
@@ -56,19 +57,20 @@ def arxiv2md_cli(url: str, dpath_source: str | None = None) -> str:
     return content_md, metadata
 
 
-def arxiv2md(url: str, dpath_source: str | None = None) -> str:
+def arxiv2md(url: str, dpath_source: str | None = None) -> Tuple[str, dict]:
     """
     Convert an arXiv paper to Markdown.
 
     Args:
         url (str): The URL of the arXiv paper or the arXiv ID.
-        dpath_source (str | None, optional):
-            The directory path to store the source files (e.g., .tex,
-            .xml). If None, a temporary directory will be used. Defaults
-            to None.
+        dpath_source (str | None, optional): The directory path to store
+            the source files (e.g., .tex, .xml). If None, a temporary
+            directory will be used. Defaults to None.
 
     Returns:
-        str: The content of the converted Markdown file.
+        Tuple[str, dict]: A tuple containing the Markdown content and
+            metadata. The metadata includes the arXiv ID, title,
+            published date, and authors.
     """
     arxiv_id = extract_arxiv_id(url)
 
