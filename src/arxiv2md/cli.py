@@ -24,20 +24,20 @@ def cli(
             "named as `arxiv_<arxiv_id>.md`."
         ),
     ),
-    dpath_source: str = typer.Option(
-        None,
-        "--dir_source",
-        help=(
-            "The directory to store the source files (e.g., .tex, .xml). If "
-            "None, a temporary directory will be used."
-        ),
-    ),
     yes: bool = typer.Option(
         False,
         "--yes", "-y",
         help=(
             "If True, the command will not prompt for confirmation when "
             "overwriting existing files or creating directories."
+        ),
+    ),
+    dpath_source: str = typer.Option(
+        None,
+        "--dir_source",
+        help=(
+            "The directory to store the source files (e.g., .tex, .xml). If "
+            "None, a temporary directory will be used."
         ),
     ),
     no_frontmatter: bool = typer.Option(
@@ -79,7 +79,11 @@ def cli(
     if stdout:
         print(content_md)
     else:
-        post = frontmatter.loads(content_md, **metadata)
-        with open(fpath_output, "wb") as f:
-            frontmatter.dump(post, f, encoding="utf-8")
+        if no_frontmatter:
+            with open(fpath_output, "w", encoding="utf-8") as f:
+                f.write(content_md)
+        else:
+            post = frontmatter.loads(content_md, **metadata)
+            with open(fpath_output, "wb") as f:
+                frontmatter.dump(post, f, encoding="utf-8")
         print(f"Markdown file saved to `{fpath_output}`")
