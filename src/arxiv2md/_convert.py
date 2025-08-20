@@ -69,7 +69,6 @@ class JATSConverter:
         self._clear()
 
         self._extract_title()
-        self._extract_authors()
         self._extract_abstract()
         self._extract_body()
         self._extract_references()
@@ -90,20 +89,6 @@ class JATSConverter:
         title = self.soup.find("article-title")
         if title:
             self.output.append(f"# {self._clean_text(title.get_text())}\n")
-
-    def _extract_authors(self):
-        authors = []
-        contrib_group = self.soup.find("contrib-group")
-        if contrib_group:
-            for contrib in contrib_group.find_all("contrib", {"contrib-type": "author"}):
-                name_elem = contrib.find("name")
-                if name_elem:
-                    surname = name_elem.find("surname")
-                    given_names = name_elem.find("given-names")
-                    if surname and given_names:
-                        authors.append(f"{given_names.get_text().strip()} {surname.get_text().strip()}")
-        if authors:
-            self.output.append(f"Authors: {', '.join(authors)}\n")
 
     def _extract_abstract(self):
         abstract = self.soup.find("abstract")
