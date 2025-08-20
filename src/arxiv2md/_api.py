@@ -2,7 +2,7 @@ from pathlib import Path
 import tempfile
 
 from ._utils import extract_arxiv_id
-from ._get_source import get_source
+from ._utils import get_source
 from ._convert import tex2xml, JATSConverter
 
 
