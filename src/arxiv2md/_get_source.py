@@ -1,10 +1,9 @@
-from pathlib import Path
 import requests
 import tarfile
 import io
 
 
-def get_source(arxiv_id: str, dpath_output: Path):
+def get_source(arxiv_id: str, dpath_output: str) -> str:
     url_source = f"https://arxiv.org/e-print/{arxiv_id}"
     try:
         response = requests.get(url_source, timeout=30)
