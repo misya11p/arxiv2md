@@ -56,8 +56,8 @@ def cli(
         fpath_output = fpath_output or f"arxiv_{arxiv_id.replace('.', '-')}.md"
         fpath_output = Path(fpath_output).resolve()
 
-        if (not fpath_output.parent.exists()) and (not yes):
-            if typer.confirm(
+        if not fpath_output.parent.exists():
+            if yes or typer.confirm(
                 f"The directory `{fpath_output.parent}` does not exist. "
                 "Do you want to create it?",
                 default=True,
@@ -67,7 +67,7 @@ def cli(
         if not fpath_output.suffix:
             fpath_output = fpath_output.with_suffix(".md")
 
-        if (fpath_output.exists()) and (not yes):
+        if fpath_output.exists() and (not yes):
             if not typer.confirm(
                 f"{fpath_output} already exists. "
                 "Do you want to overwrite it?"
