@@ -1,7 +1,7 @@
 [project]
 name = "arxiv2md"
 version = "0.1.0"
-description = "Add your description here"
+description = "A command-line tool and Python library to convert arXiv papers to Markdown format."
 readme = "README.md"
 authors = [{ name = "komiya", email = "90894519+misya11p@users.noreply.github.com" }]
 license = { file = "LICENSE" }
