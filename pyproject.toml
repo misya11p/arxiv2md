@@ -5,6 +5,16 @@ description = "A command-line tool and Python library to convert arXiv papers to
 readme = "README.md"
 authors = [{ name = "komiya", email = "90894519+misya11p@users.noreply.github.com" }]
 license = { file = "LICENSE" }
+keywords = ["arxiv", "markdown", "converter"]
+classifiers = [
+    "Development Status :: 4 - Beta",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.10",
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
+    "License :: OSI Approved :: MIT License",
+    "Intended Audience :: Science/Research",
+]
 requires-python = ">=3.10"
 dependencies = [
     "arxiv>=2.2.0",
