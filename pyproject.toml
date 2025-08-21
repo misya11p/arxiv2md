@@ -4,6 +4,7 @@ version = "0.1.0"
 description = "Add your description here"
 readme = "README.md"
 authors = [{ name = "komiya", email = "90894519+misya11p@users.noreply.github.com" }]
+license = { file = "LICENSE" }
 requires-python = ">=3.12"
 dependencies = [
     "arxiv>=2.2.0",
