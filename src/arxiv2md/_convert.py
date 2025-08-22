@@ -72,6 +72,7 @@ class JATSConverter:
         self._extract_abstract()
         self._extract_body()
         self._extract_references()
+        self._format_references()
 
         markdown_content = "\n".join(self.output) + "\n"
 
@@ -83,7 +84,16 @@ class JATSConverter:
             return ""
         text = text.strip()
         text = re.sub(r"\s+", " ", text)
+        text = re.sub(r"\[\[(\^.*?)\]\]", r"[\1]", text)
         return text
+
+    @staticmethod
+    def _clean_bibid(bibid):
+        return bibid.replace("bib.bib", "")
+
+    @staticmethod
+    def _clean_fnid(fn_id):
+        return fn_id.replace("id", "fn")
 
     def _extract_title(self):
         title = self.soup.find("article-title")
@@ -109,25 +119,26 @@ class JATSConverter:
         if not ref_list:
             return None
 
-        refs = []
         for ref in ref_list.find_all("ref"):
-            ref_id = ref.get("id", "").replace("bib.bib", "")
-            ref_id_search = re.search(r"\d+", ref_id)
-            ref_id = ref_id_search.group(0) if ref_id_search else ref_id
+            ref_id = ref.get("id", "")
+            ref_id = self._clean_bibid(ref_id)
             citation = ref.find("mixed-citation") or ref.find("element-citation")
             if citation:
                 ref_text = self._format_reference(citation)
-                refs.append((ref_id, ref_text))
+                self.references[ref_id] = ref_text
 
-        if not refs:
-            return None
+    def _format_references(self):
+        if not self.references:
+            return
 
-        refs.sort(key=lambda x: int(x[0]))
-        ref_content = ["## References\n"]
-        for ref_id, ref_text in refs:
-            ref_content.append(f"{ref_id}. {ref_text}")
-
-        self.output.append("\n".join(ref_content))
+        self.output.append("## References\n")
+        max_digit = len(max(self.references.keys(), key=len))
+        for ref_id, ref_text in sorted(
+            self.references.items(),
+            key=lambda x: re.sub(r"\d+", lambda m: m.group(0).zfill(max_digit), x[0])
+        ):
+            self.output.append(f"[^{ref_id}]: {ref_text}")
+        self.output.append("")
 
     def _process_section(self, section, level):
         title = section.find("title")
@@ -163,6 +174,8 @@ class JATSConverter:
             elif child.name == "inline-formula":
                 math_text = self._extract_math_text(child)
                 result.append(f"${math_text}$")
+            elif child.name == "fn":
+                result.append(self._process_footnote(child))
             else:
                 result.append(self._process_mixed_content(child))
 
@@ -197,10 +210,8 @@ class JATSConverter:
     def _process_reference(self, xref):
         rid = xref.get("rid", "")
         if rid.startswith("bib."): # Reference to bibliography
-            ref_num = re.search(r"\d+", rid)
-            if ref_num:
-                ref_num = ref_num.group(0)
-            return f"[{ref_num}]"
+            rid = self._clean_bibid(rid)
+            return f"[^{rid}]"
         else: # Reference to figure/table
             return xref.get_text()
 
@@ -270,6 +281,14 @@ class JATSConverter:
             math_text = self._extract_math_text(math_elem)
             self.output.append(f"$$\n{math_text}\n$$")
             self.output.append("")
+
+    def _process_footnote(self, fn):
+        fn_id = fn.get("id", "")
+        fn_id = self._clean_fnid(fn_id)
+        fn_text = fn.get_text(strip=True)
+        if fn_id:
+            self.references[fn_id] = fn_text
+            return f"[^{fn_id}]"
 
     def _extract_math_text(self, formula_elem):
         if not formula_elem:
