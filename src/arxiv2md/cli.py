@@ -2,7 +2,7 @@ from pathlib import Path
 
 import typer
 
-from ._utils import extract_arxiv_id, concat_metadata
+from ._utils import extract_arxiv_id
 from ._api import arxiv2md_cli
 
 

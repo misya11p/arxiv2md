@@ -1,6 +1,6 @@
 from pathlib import Path
 import tempfile
-from typing import Tuple
+from typing import Tuple, Dict
 
 from ._utils import extract_arxiv_id, get_source, concat_metadata
 from ._convert import tex2xml, JATSConverter
@@ -63,8 +63,8 @@ def arxiv2md_cli(url: str, dpath_source: str | None, frontmatter: bool) -> str:
 def arxiv2md(
     url: str,
     dpath_source: str | None = None,
-    frontmatter: bool = True,
-) -> Tuple[str, dict]:
+    frontmatter: bool = False,
+) -> Tuple[str, Dict]:
     """
     Convert an arXiv paper to Markdown.
 
@@ -77,7 +77,7 @@ def arxiv2md(
             will include frontmatter metadata. Defaults to True.
 
     Returns:
-        Tuple[str, dict]: A tuple containing the Markdown content and
+        Tuple[str, Dict]: A tuple containing the Markdown content and
             metadata. The metadata includes the arXiv ID, title,
             published date, and authors.
     """
