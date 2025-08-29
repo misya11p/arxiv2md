@@ -1,6 +1,6 @@
 [project]
 name = "arxiv2md"
-version = "1.0.0"
+dynamic = ["version"]
 description = "A command-line tool and Python library to convert arXiv papers to Markdown format."
 readme = "README.md"
 authors = [{ name = "komiya", email = "90894519+misya11p@users.noreply.github.com" }]
@@ -30,5 +30,8 @@ dependencies = [
 arxiv2md = "arxiv2md.cli:app"
 
 [build-system]
-requires = ["uv_build>=0.8.8,<0.9.0"]
-build-backend = "uv_build"
+requires = ["hatchling", "uv-dynamic-versioning"]
+build-backend = "hatchling.build"
+
+[tool.hatch.version]
+source = "uv-dynamic-versioning"
