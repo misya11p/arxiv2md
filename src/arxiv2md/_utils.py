@@ -6,7 +6,7 @@ import json
 import arxiv
 
 
-DNAME_SOURCE_ARXIV = "arxiv_source"
+DNAME_SOURCE_ARXIV = "source_arxiv_{arxiv_id}"
 FNAME_METADATA = "metadata.json"
 
 
@@ -26,7 +26,11 @@ def get_source(url: str, dpath_source: Path) -> str:
     arxiv_id = extract_arxiv_id(url)
     paper = next(arxiv.Client().results(arxiv.Search(id_list=[arxiv_id])))
     fpath_source = paper.download_source(dpath_source)
-    dpath_source_arxiv = dpath_source / DNAME_SOURCE_ARXIV
+
+    dname_source_arxiv = DNAME_SOURCE_ARXIV.format(
+        arxiv_id=arxiv_id.replace('.', '-')
+    )
+    dpath_source_arxiv = dpath_source / dname_source_arxiv
     with tarfile.open(fpath_source, mode="r:gz") as tar:
         tar.extractall(dpath_source_arxiv)
 
