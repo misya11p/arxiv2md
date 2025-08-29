@@ -33,7 +33,7 @@ def cli(
     ),
     dpath_source: str = typer.Option(
         None,
-        "--dir_source",
+        "--source-dir",
         help=(
             "The directory to store the source files (e.g., .tex, .xml). If "
             "None, a temporary directory will be used."
@@ -41,7 +41,7 @@ def cli(
     ),
     no_frontmatter: bool = typer.Option(
         False,
-        "--no_frontmatter",
+        "--no-frontmatter",
         help=(
             "If True, the output Markdown file will not include frontmatter "
             "metadata."
