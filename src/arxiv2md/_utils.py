@@ -59,7 +59,9 @@ def get_main_texfile(dpath_source: Path) -> Path:
 
 
 def concat_metadata(markdown: str, metadata: Dict) -> str:
-    authors = "\n".join([f"  - \"{author}\"" for author in metadata["authors"]])
+    authors = "\n".join(
+        [f"  - \"{author}\"" for author in metadata["authors"]]
+    )
     frontmatter = "\n".join([
         "---",
         f"title: \"{metadata['title']}\"",
