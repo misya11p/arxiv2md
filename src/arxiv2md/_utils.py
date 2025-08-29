@@ -2,6 +2,7 @@ import re
 from pathlib import Path
 import tarfile
 import json
+from typing import Dict
 
 import arxiv
 
@@ -43,7 +44,7 @@ def get_source(url: str, dpath_source: Path) -> str:
     with open(dpath_source / FNAME_METADATA, "w", encoding="utf-8") as f:
         json.dump(metadata, f, ensure_ascii=False, indent=2)
 
-    return dpath_source_arxiv
+    return dpath_source_arxiv, metadata
 
 
 def get_main_texfile(dpath_source: Path) -> Path:
@@ -55,3 +56,17 @@ def get_main_texfile(dpath_source: Path) -> Path:
                     return fpath
     else:
         raise FileNotFoundError("No .tex files found in the source directory.")
+
+
+def concat_metadata(markdown: str, metadata: Dict) -> str:
+    authors = "\n".join([f"  - \"{author}\"" for author in metadata["authors"]])
+    frontmatter = "\n".join([
+        "---",
+        f"title: \"{metadata['title']}\"",
+        f"arxiv_id: \"{metadata['arxiv_id']}\"",
+        f"published: \"{metadata['published']}\"",
+        f"authors: \n{authors}",
+        "---",
+        "",
+    ])
+    return frontmatter + markdown

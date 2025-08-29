@@ -2,7 +2,7 @@ from pathlib import Path
 import tempfile
 from typing import Tuple
 
-from ._utils import extract_arxiv_id, get_source
+from ._utils import extract_arxiv_id, get_source, concat_metadata
 from ._convert import tex2xml, JATSConverter
 
 
@@ -17,7 +17,7 @@ def _core_arxiv2md_cli(arxiv_id: str, dpath_source: str) -> str:
         text=f"Get source for arXiv:{arxiv_id}",
         spinner="dots",
     ) as spinner:
-        dpath_source_arxiv = get_source(arxiv_id, dpath_source)
+        dpath_source_arxiv, metadata = get_source(arxiv_id, dpath_source)
         spinner.succeed()
 
     with Halo(
@@ -26,7 +26,7 @@ def _core_arxiv2md_cli(arxiv_id: str, dpath_source: str) -> str:
     ) as spinner:
         tex2xml(dpath_source_arxiv)
         converter = JATSConverter(dpath_source)
-        content_md, metadata = converter.convert_to_md()
+        content_md = converter.convert_to_md()
         spinner.succeed()
 
     return content_md, metadata
@@ -37,15 +37,15 @@ def _core_arxiv2md(arxiv_id: str, dpath_source: str) -> str:
     if not dpath_source.exists():
         dpath_source.mkdir(parents=True)
 
-    dpath_source_arxiv = get_source(arxiv_id, dpath_source)
+    dpath_source_arxiv, metadata = get_source(arxiv_id, dpath_source)
     tex2xml(dpath_source_arxiv)
     converter = JATSConverter(dpath_source)
-    content_md, metadata = converter.convert_to_md()
+    content_md = converter.convert_to_md()
 
     return content_md, metadata
 
 
-def arxiv2md_cli(url: str, dpath_source: str | None = None) -> str:
+def arxiv2md_cli(url: str, dpath_source: str | None, frontmatter: bool) -> str:
     arxiv_id = extract_arxiv_id(url)
 
     if dpath_source:
@@ -54,10 +54,17 @@ def arxiv2md_cli(url: str, dpath_source: str | None = None) -> str:
         with tempfile.TemporaryDirectory() as tempdir:
             content_md, metadata = _core_arxiv2md_cli(arxiv_id, tempdir)
 
-    return content_md, metadata
+    if frontmatter:
+        content_md = concat_metadata(content_md, metadata)
+
+    return content_md
 
 
-def arxiv2md(url: str, dpath_source: str | None = None) -> Tuple[str, dict]:
+def arxiv2md(
+    url: str,
+    dpath_source: str | None = None,
+    frontmatter: bool = True,
+) -> Tuple[str, dict]:
     """
     Convert an arXiv paper to Markdown.
 
@@ -66,6 +73,8 @@ def arxiv2md(url: str, dpath_source: str | None = None) -> Tuple[str, dict]:
         dpath_source (str | None, optional): The directory path to store
             the source files (e.g., .tex, .xml). If None, a temporary
             directory will be used. Defaults to None.
+        frontmatter (bool, optional): If True, the output Markdown
+            will include frontmatter metadata. Defaults to True.
 
     Returns:
         Tuple[str, dict]: A tuple containing the Markdown content and
@@ -79,5 +88,8 @@ def arxiv2md(url: str, dpath_source: str | None = None) -> Tuple[str, dict]:
     else:
         with tempfile.TemporaryDirectory() as tempdir:
             content_md, metadata = _core_arxiv2md(arxiv_id, tempdir)
+
+    if frontmatter:
+        content_md = concat_metadata(content_md, metadata)
 
     return content_md, metadata

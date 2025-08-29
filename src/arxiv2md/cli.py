@@ -1,9 +1,8 @@
 from pathlib import Path
 
 import typer
-import frontmatter
 
-from ._utils import extract_arxiv_id
+from ._utils import extract_arxiv_id, concat_metadata
 from ._api import arxiv2md_cli
 
 
@@ -74,16 +73,11 @@ def cli(
             ):
                 raise typer.Exit()
 
-    content_md, metadata = arxiv2md_cli(arxiv_id, dpath_source)
+    content_md = arxiv2md_cli(arxiv_id, dpath_source, not no_frontmatter)
 
     if stdout:
         print(content_md)
     else:
-        if no_frontmatter:
-            with open(fpath_output, "w", encoding="utf-8") as f:
-                f.write(content_md)
-        else:
-            post = frontmatter.loads(content_md, **metadata)
-            with open(fpath_output, "wb") as f:
-                frontmatter.dump(post, f, encoding="utf-8")
+        with open(fpath_output, "w", encoding="utf-8") as f:
+            f.write(content_md)
         print(f"Markdown file saved to `{fpath_output}`")

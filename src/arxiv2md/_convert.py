@@ -1,11 +1,10 @@
 from pathlib import Path
 import subprocess
 import re
-import json
 
 from bs4 import BeautifulSoup, NavigableString
 
-from ._utils import get_main_texfile, FNAME_METADATA
+from ._utils import get_main_texfile
 
 
 FNAME_XML = "paper.xml"
@@ -52,11 +51,8 @@ def tex2xml(dpath_source: Path) -> Path:
 class JATSConverter:
     def __init__(self, dpath_source: Path):
         fpath_jats = dpath_source / FNAME_JATS
-        fpath_metadata = dpath_source / FNAME_METADATA
         with open(fpath_jats, "r", encoding="utf-8") as f:
             content = f.read()
-        with open(fpath_metadata, "r", encoding="utf-8") as f:
-            self.metadata = json.load(f)
         self.soup = BeautifulSoup(content, "xml")
         self._clear()
 
@@ -76,7 +72,7 @@ class JATSConverter:
 
         markdown_content = "\n".join(self.output) + "\n"
 
-        return markdown_content, self.metadata
+        return markdown_content
 
     @staticmethod
     def _clean_text(text):
