@@ -21,7 +21,6 @@ dependencies = [
     "bs4>=0.0.2",
     "halo>=0.0.31",
     "lxml>=6.0.0",
-    "python-frontmatter>=1.1.0",
     "requests>=2.32.5",
     "typer>=0.16.1",
 ]
