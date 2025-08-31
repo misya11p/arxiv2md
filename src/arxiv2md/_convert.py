@@ -70,7 +70,9 @@ class JATSConverter:
         self._extract_references()
         self._format_references()
 
-        markdown_content = "\n".join(self.output) + "\n"
+        markdown_content = "\n".join(self.output)
+        if markdown_content[-1] != "\n":
+            markdown_content += "\n"
 
         return markdown_content
 
