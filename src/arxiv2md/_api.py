@@ -6,7 +6,11 @@ from ._utils import extract_arxiv_id, get_source, concat_metadata
 from ._convert import tex2xml, JATSConverter
 
 
-def _core_arxiv2md_cli(arxiv_id: str, dpath_source: str) -> str:
+def _core_arxiv2md_cli(
+    arxiv_id: str,
+    dpath_source: str,
+    verbose: bool,
+) -> str:
     from halo import Halo
 
     dpath_source = Path(dpath_source).resolve()
@@ -23,8 +27,11 @@ def _core_arxiv2md_cli(arxiv_id: str, dpath_source: str) -> str:
     with Halo(
         text=f"Convert to Markdown",
         spinner="dots",
+        enabled=not verbose,
     ) as spinner:
-        tex2xml(dpath_source_arxiv)
+        if verbose:
+            print("Converting to Markdown")
+        tex2xml(dpath_source_arxiv, verbose)
         converter = JATSConverter(dpath_source)
         content_md = converter.convert_to_md()
         spinner.succeed()
@@ -45,14 +52,23 @@ def _core_arxiv2md(arxiv_id: str, dpath_source: str) -> str:
     return content_md, metadata
 
 
-def arxiv2md_cli(url: str, dpath_source: str | None, frontmatter: bool) -> str:
+def arxiv2md_cli(
+    url: str,
+    dpath_source: str | None,
+    frontmatter: bool,
+    verbose: bool,
+) -> str:
     arxiv_id = extract_arxiv_id(url)
 
     if dpath_source:
-        content_md, metadata = _core_arxiv2md_cli(arxiv_id, dpath_source)
+        content_md, metadata = _core_arxiv2md_cli(
+            arxiv_id, dpath_source, verbose
+        )
     else:
         with tempfile.TemporaryDirectory() as tempdir:
-            content_md, metadata = _core_arxiv2md_cli(arxiv_id, tempdir)
+            content_md, metadata = _core_arxiv2md_cli(
+                arxiv_id, tempdir, verbose
+            )
 
     if frontmatter:
         content_md = concat_metadata(content_md, metadata)

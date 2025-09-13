@@ -12,7 +12,7 @@ FNAME_JATS = "paper.jats.xml"
 FNAME_MD = "paper.md"
 
 
-def tex2xml(dpath_source: Path) -> Path:
+def tex2xml(dpath_source: Path, verbose: bool) -> Path:
     dpath_work = dpath_source.parent
     fpath_xml = dpath_work / FNAME_XML
     fpath_jats = dpath_work / FNAME_JATS
@@ -35,8 +35,8 @@ def tex2xml(dpath_source: Path) -> Path:
     ]
     subprocess_options = {
         "cwd": dpath_work,
-        "stdout": subprocess.DEVNULL,
-        "stderr": subprocess.DEVNULL
+        "stdout": None if verbose else subprocess.DEVNULL,
+        "stderr": None if verbose else subprocess.DEVNULL,
     }
     subprocess.run(command_latexml, **subprocess_options)
     subprocess.run(command_latexmlpost, **subprocess_options)

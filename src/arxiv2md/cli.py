@@ -47,6 +47,13 @@ def cli(
             "metadata."
         ),
     ),
+    verbose: bool = typer.Option(
+        False,
+        "--verbose", "-v",
+        help=(
+            "If True, the command will print detailed logs of the process."
+        ),
+    ),
 ):
     stdout = fpath_output == "-"
     arxiv_id = extract_arxiv_id(url)
@@ -73,7 +80,9 @@ def cli(
             ):
                 raise typer.Exit()
 
-    content_md = arxiv2md_cli(arxiv_id, dpath_source, not no_frontmatter)
+    content_md = arxiv2md_cli(
+        arxiv_id, dpath_source, not no_frontmatter, verbose
+    )
 
     if stdout:
         print(content_md)
