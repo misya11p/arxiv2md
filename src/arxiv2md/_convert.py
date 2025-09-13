@@ -9,7 +9,6 @@ from ._utils import get_main_texfile
 
 FNAME_XML = "paper.xml"
 FNAME_JATS = "paper.jats.xml"
-FNAME_MD = "paper.md"
 
 
 def tex2xml(dpath_source: Path, verbose: bool) -> Path:
