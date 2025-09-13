@@ -33,7 +33,7 @@ def cli(
     ),
     dpath_source: str = typer.Option(
         None,
-        "--source-dir",
+        "--source-dir", "-d",
         help=(
             "The directory to store the source files (e.g., .tex, .xml). If "
             "None, a temporary directory will be used."
