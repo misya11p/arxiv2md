@@ -19,39 +19,41 @@ def cli(
         None,
         "--output", "-o",
         help=(
-            "The path to the output Markdown file. If None, the file will be "
-            "named as `arxiv_<arxiv_id>.md`."
+            "The path to the output Markdown file. If None, the file "
+            "will be named as `arxiv_<arxiv_id>.md`."
         ),
     ),
     yes: bool = typer.Option(
         False,
         "--yes", "-y",
         help=(
-            "If True, the command will not prompt for confirmation when "
-            "overwriting existing files or creating directories."
+            "If True, the command will not prompt for confirmation "
+            "when overwriting existing files or creating directories."
         ),
     ),
     dpath_source: str = typer.Option(
         None,
         "--source-dir", "-d",
         help=(
-            "The directory to store the source files (e.g., .tex, .xml). If "
-            "None, a temporary directory will be used."
+            "The directory to store the source files "
+            "(e.g., .tex, .xml). If None, a temporary directory will "
+            "be used."
         ),
     ),
     no_frontmatter: bool = typer.Option(
         False,
         "--no-frontmatter",
         help=(
-            "If True, the output Markdown file will not include frontmatter "
-            "metadata."
+            "If True, the output Markdown file will not include "
+            "frontmatter metadata."
         ),
     ),
     verbose: bool = typer.Option(
         False,
         "--verbose", "-v",
         help=(
-            "If True, the command will print detailed logs of the process."
+            "If True, the command will print detailed logs of the "
+            "process."
         ),
     ),
 ):
