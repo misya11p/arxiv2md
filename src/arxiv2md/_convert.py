@@ -206,7 +206,7 @@ class JATSConverter:
 
     def _process_reference(self, xref):
         rid = xref.get("rid", "")
-        if rid.startswith("bib."): # Reference to bibliography
+        if rid.startswith("bib.bib"): # Reference to bibliography
             rid = self._clean_bibid(rid)
             return f"[^{rid}]"
         else: # Reference to figure/table
