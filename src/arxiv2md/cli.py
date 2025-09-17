@@ -44,16 +44,15 @@ def cli(
         False,
         "--no-frontmatter",
         help=(
-            "If True, the output Markdown file will not include "
-            "frontmatter metadata."
+            "The output Markdown file will not include frontmatter "
+            "metadata."
         ),
     ),
     verbose: bool = typer.Option(
         False,
         "--verbose", "-v",
         help=(
-            "If True, the command will print detailed logs of the "
-            "process."
+            "The command will print detailed logs of the process."
         ),
     ),
 ):
