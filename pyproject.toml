@@ -28,6 +28,9 @@ dependencies = [
 [project.scripts]
 arxiv2md = "arxiv2md.cli:app"
 
+[project.urls]
+"Homepage" = "https://github.com/misya11p/arxiv2md"
+
 [build-system]
 requires = ["hatchling", "uv-dynamic-versioning"]
 build-backend = "hatchling.build"
