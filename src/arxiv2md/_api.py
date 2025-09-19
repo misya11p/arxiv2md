@@ -6,7 +6,7 @@ from ._utils import extract_arxiv_id, get_source, concat_metadata
 from ._convert import tex2xml, JATSConverter
 
 
-def _prepare_dource_dir(dpath_source: str) -> Path:
+def _prepare_source_dir(dpath_source: str) -> Path:
     dpath_source = Path(dpath_source).resolve()
     if dpath_source.exists():
         contents = list(dpath_source.iterdir())
@@ -28,7 +28,7 @@ def _core_arxiv2md_cli(
 ) -> str:
     from halo import Halo
 
-    dpath_source = _prepare_dource_dir(dpath_source)
+    dpath_source = _prepare_source_dir(dpath_source)
 
     with Halo(
         text=f"Get source for arXiv:{arxiv_id}",
@@ -57,7 +57,7 @@ def _core_arxiv2md(
     dpath_source: str,
     verbose: bool
 ) -> Tuple[str, Dict]:
-    dpath_source = _prepare_dource_dir(dpath_source)
+    dpath_source = _prepare_source_dir(dpath_source)
     dpath_source_arxiv, metadata = get_source(arxiv_id, dpath_source)
     tex2xml(dpath_source_arxiv, verbose)
     converter = JATSConverter(dpath_source)
