@@ -47,15 +47,13 @@ def get_source(url: str, dpath_source: Path) -> str:
     return dpath_source_arxiv, metadata
 
 
-def get_main_texfile(dpath_source: Path) -> Path:
+def get_main_texfile(dpath_source: Path) -> Path | None:
     tex_files = list(dpath_source.glob("*.tex"))
     for fpath in tex_files:
         with open(fpath, "r", encoding="utf-8") as f:
             for line in f:
                 if line.strip().startswith(r"\documentclass"):
                     return fpath
-    else:
-        raise FileNotFoundError("No .tex files found in the source directory.")
 
 
 def concat_metadata(markdown: str, metadata: Dict) -> str:

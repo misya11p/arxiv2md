@@ -15,7 +15,22 @@ def tex2xml(dpath_source: Path, verbose: bool) -> Path:
     dpath_work = dpath_source.parent
     fpath_xml = dpath_work / FNAME_XML
     fpath_jats = dpath_work / FNAME_JATS
+
+    result = subprocess.run(
+        ["which", "latexml"],
+        capture_output=True,
+        text=True,
+    )
+    if not result.stdout.strip():
+        raise FileNotFoundError(
+            "Could not find the `latexml` command. Please refer to "
+            "this guide for installing LaTeXML: "
+            "https://github.com/misya11p/arxiv2md"
+        )
+
     fpath_tex = get_main_texfile(dpath_source)
+    if not fpath_tex:
+        raise FileNotFoundError(f"Could not find the main .tex file")
 
     command_latexml = [
         "latexml",
