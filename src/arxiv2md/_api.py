@@ -103,9 +103,9 @@ def arxiv2md(
         if dpath_source.exists():
             if len(list(dpath_source.iterdir())) >= 1:
                 raise FileExistsError(
-                    f"The directory `{dpath_source}` already exists and is "
-                    "not empty. Please specify an empty or non-existing "
-                    "directory."
+                    f"The directory `{dpath_source}` already exists "
+                    "and is not empty. Please specify an empty or "
+                    "non-existing directory."
                 )
         else:
             dpath_source.mkdir(parents=True, exist_ok=True)

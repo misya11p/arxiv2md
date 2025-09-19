@@ -67,8 +67,8 @@ def cli(
 
         if not fpath_output.parent.exists():
             if yes or typer.confirm(
-                f"The directory `{fpath_output.parent}` does not exist. "
-                "Do you want to create it?",
+                f"The directory `{fpath_output.parent}` does not "
+                "exist. Do you want to create it?",
                 default=True,
             ):
                 fpath_output.parent.mkdir(parents=True)
@@ -78,8 +78,8 @@ def cli(
 
         if fpath_output.exists() and (not yes):
             if not typer.confirm(
-                f"{fpath_output} already exists. "
-                "Do you want to overwrite it?"
+                f"{fpath_output} already exists. Do you want to "
+                "overwrite it?"
             ):
                 raise typer.Exit()
 
@@ -88,9 +88,10 @@ def cli(
             if dpath_source.exists():
                 if (not yes) and (len(list(dpath_source.iterdir())) >= 1):
                     if not typer.confirm(
-                        f"The directory `{dpath_source}` already exists "
-                        "and is not empty. If you continue, its contents "
-                        "may be overwritten. Do you want to continue?",
+                        f"The directory `{dpath_source}` already "
+                        "exists and is not empty. If you continue, its "
+                        "contents may be overwritten. Do you want to "
+                        "continue?",
                         default=False,
                     ):
                         raise typer.Exit()
