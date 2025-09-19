@@ -6,29 +6,12 @@ from ._utils import extract_arxiv_id, get_source, concat_metadata
 from ._convert import tex2xml, JATSConverter
 
 
-def _prepare_source_dir(dpath_source: str) -> Path:
-    dpath_source = Path(dpath_source).resolve()
-    if dpath_source.exists():
-        contents = list(dpath_source.iterdir())
-        if len(contents) > 0:
-            raise FileExistsError(
-                f"The directory `{dpath_source}` already exists and is "
-                "not empty. Please specify an empty or non-existing "
-                "directory."
-            )
-    else:
-        dpath_source.mkdir(parents=True)
-    return dpath_source
-
-
 def _core_arxiv2md_cli(
     arxiv_id: str,
-    dpath_source: str,
+    dpath_source: Path,
     verbose: bool,
 ) -> str:
     from halo import Halo
-
-    dpath_source = _prepare_source_dir(dpath_source)
 
     with Halo(
         text=f"Get source for arXiv:{arxiv_id}",
@@ -54,21 +37,19 @@ def _core_arxiv2md_cli(
 
 def _core_arxiv2md(
     arxiv_id: str,
-    dpath_source: str,
+    dpath_source: Path,
     verbose: bool
 ) -> Tuple[str, Dict]:
-    dpath_source = _prepare_source_dir(dpath_source)
     dpath_source_arxiv, metadata = get_source(arxiv_id, dpath_source)
     tex2xml(dpath_source_arxiv, verbose)
     converter = JATSConverter(dpath_source)
     content_md = converter.convert_to_md()
-
     return content_md, metadata
 
 
 def arxiv2md_cli(
     url: str,
-    dpath_source: str | None,
+    dpath_source: str | Path | None,
     frontmatter: bool,
     verbose: bool,
 ) -> str:
@@ -80,8 +61,9 @@ def arxiv2md_cli(
         )
     else:
         with tempfile.TemporaryDirectory() as tempdir:
+            dpath_source = Path(tempdir)
             content_md, metadata = _core_arxiv2md_cli(
-                arxiv_id, tempdir, verbose
+                arxiv_id, dpath_source, verbose
             )
 
     if frontmatter:
@@ -92,7 +74,7 @@ def arxiv2md_cli(
 
 def arxiv2md(
     url: str,
-    dpath_source: str | None = None,
+    dpath_source: str | Path | None = None,
     frontmatter: bool = False,
     verbose: bool = False,
 ) -> Tuple[str, Dict]:
@@ -117,10 +99,25 @@ def arxiv2md(
     arxiv_id = extract_arxiv_id(url)
 
     if dpath_source:
-        content_md, metadata = _core_arxiv2md(arxiv_id, dpath_source, verbose)
+        dpath_source = Path(dpath_source).resolve()
+        if dpath_source.exists():
+            if len(list(dpath_source.iterdir())) >= 1:
+                raise FileExistsError(
+                    f"The directory `{dpath_source}` already exists and is "
+                    "not empty. Please specify an empty or non-existing "
+                    "directory."
+                )
+        else:
+            dpath_source.mkdir(parents=True, exist_ok=True)
+        content_md, metadata = _core_arxiv2md(
+            arxiv_id, dpath_source, verbose
+        )
     else:
         with tempfile.TemporaryDirectory() as tempdir:
-            content_md, metadata = _core_arxiv2md(arxiv_id, tempdir, verbose)
+            dpath_source = Path(tempdir)
+            content_md, metadata = _core_arxiv2md(
+                arxiv_id, dpath_source, verbose
+            )
 
     if frontmatter:
         content_md = concat_metadata(content_md, metadata)
