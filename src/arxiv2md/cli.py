@@ -61,6 +61,21 @@ def cli(
     stdout = fpath_output == "-"
     arxiv_id = extract_arxiv_id(url)
 
+    if dpath_source:
+        dpath_source = Path(dpath_source).resolve()
+        if dpath_source.exists():
+            if (not yes) and (len(list(dpath_source.iterdir())) >= 1):
+                if not typer.confirm(
+                    f"The directory `{dpath_source}` already "
+                    "exists and is not empty. If you continue, its "
+                    "contents may be overwritten. Do you want to "
+                    "continue?",
+                    default=False,
+                ):
+                    raise typer.Exit()
+        else:
+            dpath_source.mkdir(parents=True)
+
     if not stdout:
         fpath_output = fpath_output or f"arxiv_{arxiv_id.replace('.', '-')}.md"
         fpath_output = Path(fpath_output).resolve()
@@ -82,21 +97,6 @@ def cli(
                 "overwrite it?"
             ):
                 raise typer.Exit()
-
-        if dpath_source:
-            dpath_source = Path(dpath_source).resolve()
-            if dpath_source.exists():
-                if (not yes) and (len(list(dpath_source.iterdir())) >= 1):
-                    if not typer.confirm(
-                        f"The directory `{dpath_source}` already "
-                        "exists and is not empty. If you continue, its "
-                        "contents may be overwritten. Do you want to "
-                        "continue?",
-                        default=False,
-                    ):
-                        raise typer.Exit()
-            else:
-                dpath_source.mkdir(parents=True)
 
     content_md = arxiv2md_cli(
         arxiv_id, dpath_source, not no_frontmatter, verbose
