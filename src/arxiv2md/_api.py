@@ -27,7 +27,7 @@ def _core_arxiv2md_cli(
     ) as spinner:
         if verbose:
             print("Converting to Markdown")
-        tex2xml(dpath_source_arxiv, verbose)
+        tex2xml(dpath_source_arxiv, metadata["title"], verbose)
         converter = JATSConverter(dpath_source)
         content_md = converter.convert_to_md()
         spinner.succeed()
@@ -41,7 +41,7 @@ def _core_arxiv2md(
     verbose: bool
 ) -> Tuple[str, Dict]:
     dpath_source_arxiv, metadata = get_source(arxiv_id, dpath_source)
-    tex2xml(dpath_source_arxiv, verbose)
+    tex2xml(dpath_source_arxiv, metadata["title"], verbose)
     converter = JATSConverter(dpath_source)
     content_md = converter.convert_to_md()
     return content_md, metadata

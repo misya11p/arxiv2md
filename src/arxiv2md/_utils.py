@@ -3,6 +3,7 @@ from pathlib import Path
 import tarfile
 import json
 from typing import Dict
+from difflib import SequenceMatcher
 
 import arxiv
 
@@ -47,13 +48,36 @@ def get_source(url: str, dpath_source: Path) -> str:
     return dpath_source_arxiv, metadata
 
 
-def get_main_texfile(dpath_source: Path) -> Path | None:
-    tex_files = list(dpath_source.glob("*.tex"))
-    for fpath in tex_files:
-        with open(fpath, "r", encoding="utf-8") as f:
-            for line in f:
-                if line.strip().startswith(r"\documentclass"):
-                    return fpath
+def _main_tex_score(fpath_tex, title: str) -> float:
+    score = 0
+    with open(fpath_tex, "r", encoding="utf-8") as f:
+        for line in f:
+            line = line.strip()
+            if line.startswith(r"\documentclass"):
+                score += 20
+            elif line.startswith(r"\begin{document}"):
+                score += 5
+            elif line.startswith(r"\title"):
+                title_latex = re.sub(
+                    r"[{}]", "", line[len(r"\title"):].strip()
+                )
+                ratio = SequenceMatcher(None, title, title_latex).ratio()
+                score += 5 * ratio
+            elif line.startswith(r"\maketitle"):
+                score += 3
+    return score
+
+def get_main_texfile(dpath_source: Path, title: str) -> Path | None:
+    tex_files = [
+        (f, _main_tex_score(f, title))
+        for f in dpath_source.glob("*.tex")
+    ]
+    tex_files = [(f, s) for f, s in tex_files if s > 0]
+
+    if not tex_files:
+        return None
+    main_tex_file = max(tex_files, key=lambda x: x[1])[0]
+    return main_tex_file
 
 
 def concat_metadata(markdown: str, metadata: Dict) -> str:

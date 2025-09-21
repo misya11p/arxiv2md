@@ -11,7 +11,7 @@ FNAME_XML = "paper.xml"
 FNAME_JATS = "paper.jats.xml"
 
 
-def tex2xml(dpath_source: Path, verbose: bool) -> Path:
+def tex2xml(dpath_source: Path, title: str, verbose: bool) -> Path:
     dpath_work = dpath_source.parent
     fpath_xml = dpath_work / FNAME_XML
     fpath_jats = dpath_work / FNAME_JATS
@@ -28,7 +28,7 @@ def tex2xml(dpath_source: Path, verbose: bool) -> Path:
             "https://github.com/misya11p/arxiv2md"
         )
 
-    fpath_tex = get_main_texfile(dpath_source)
+    fpath_tex = get_main_texfile(dpath_source, title)
     if not fpath_tex:
         raise FileNotFoundError(f"Could not find the main .tex file")
 
