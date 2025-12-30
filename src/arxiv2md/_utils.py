@@ -19,8 +19,7 @@ def extract_arxiv_id(url: str) -> str:
         return arxiv_id
     else:
         raise ValueError(
-            f"Invalid arXiv URL: {url}. "
-            "Could not extract arXiv ID."
+            f"Invalid input URL: {url}. Could not extract arXiv ID."
         )
 
 
