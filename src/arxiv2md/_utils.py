@@ -89,7 +89,7 @@ def concat_metadata(markdown: str, metadata: Dict) -> str:
         f"title: \"{metadata['title']}\"",
         f"arxiv_id: \"{metadata['arxiv_id']}\"",
         f"published: \"{metadata['published']}\"",
-        f"authors: \n{authors}",
+        f"authors:\n{authors}",
         "---",
         "",
     ])
