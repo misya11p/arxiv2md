@@ -8,7 +8,3 @@ wheels/
 
 # Virtual environments
 .venv/
-arxiv/
-*.ipynb
-readme_.md
-test
