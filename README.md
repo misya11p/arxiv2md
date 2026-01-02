@@ -53,4 +53,3 @@ Example output file: [example.md](example.md)
 - Papers without provided LaTeX source code cannot be converted.
 - Figures and tables will be ignored.
 - Papers not using bibtex will have reference citations displayed incorrectly.
-- For papers with a large number of pages, processing by latexml may take considerable time.
