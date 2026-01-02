@@ -2,7 +2,7 @@
 title: "Attention Is All You Need"
 arxiv_id: "1706.03762"
 published: "2017-06-12"
-authors: 
+authors:
   - "Ashish Vaswani"
   - "Noam Shazeer"
   - "Niki Parmar"
